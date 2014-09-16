@@ -1,0 +1,8 @@
+/*ciao a tutti
+asa*/
+ass
+
+int x=c+3;
+
+//eccolo
+saisa=1 void /*void 3*/

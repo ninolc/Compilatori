@@ -1,0 +1,8 @@
+
+%option main
+
+%%
+
+[a-z]+	{printf("ciao");}
+
+[a-zA-Z ]+ {printf("hola");}

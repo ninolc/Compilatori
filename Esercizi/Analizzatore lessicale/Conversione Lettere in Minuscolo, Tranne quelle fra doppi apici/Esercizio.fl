@@ -1,0 +1,12 @@
+/*Converta tutte le lettere maiuscole di un file in minuscole, ad eccezione di quelle racchiuse tra “ e “*/
+%{
+	int i;
+%}
+
+%option main
+
+%%
+[A-Z] printf("%c",tolower(*yytext));
+
+\"[A-Z]*\" ECHO;
+

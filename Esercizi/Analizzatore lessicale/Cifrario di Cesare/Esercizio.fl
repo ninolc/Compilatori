@@ -1,0 +1,29 @@
+/*Scrivere un programma in Flex che converta un file
+attraverso il Cifrario di Cesare.
+Il cifrario di Cesare è uno dei più antichi algoritmi crittografici
+di cui si abbia traccia storica. È un cifrario a sostituzione
+monoalfabetica in cui ogni lettera del testo in chiaro è
+sostituita nel testo cifrato dalla lettera che si trova un certo
+numero di posizioni dopo nell'alfabeto. Nel nostro caso
+useremo uno spostamento di 3 posizioni. Ovvero ‘A’ sarà
+sostituito con ‘D’, ‘B’ con ‘E’ e così via. La cifratura è ciclica, nel
+senso che ‘X’ è sostituito con ‘A’, ‘Y’ con ‘B’ e ‘Z’ con ‘C’.*/
+
+%{
+	int offset=3;
+%}
+
+%option noyywrap
+%%
+
+[a-wA-W]	{printf("%c",*yytext+offset);}
+[x-zX-Z]	{printf("%c",*yytext+(offset-26));}
+
+%%
+
+int main(int argc, char* argv[])
+{
+	yylex();
+	offset=atoi(argv[1]);
+	return 0;
+}

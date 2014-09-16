@@ -1,0 +1,73 @@
+/*• Scrivere in Flex un tokenizzatore per il linguaggio C che riconosca i
+seguenti lessemi:
+main
+int
+void
+return
+{
+}
+(
+)
+;
+=
++
+*
+identificatori (che cominciano con lettera), con token ID.
+Costanti intere con token INTCONST
+
+• Il programma deve restituire l’elenco dei token, i relativi
+attributi (ovvero nel caso degli identificatori, il nome
+dell’identificatore, nel caso delle costanti, il numero) e il
+numero di riga in cui il token compare.
+• I commenti devono essere riconosciuti e devono essere
+contate le righe che contengono commenti , sia quelli
+racchiusi tra / * e * / che il commento preceduto da //. */
+
+%{
+	int riga=1,contcom=0;
+%}
+
+%x COMMENTO
+%option noyywrap
+
+%%
+
+int				{fprintf(yyout,"tok_int \t \t\t%d\n",riga);}
+main			{fprintf(yyout,"tok_main \t \t\t%d\n",riga);}
+void			{fprintf(yyout,"tok_void \t \t\t%d\n",riga);}
+"("				{fprintf(yyout,"tok_para \t \t\t%d\n",riga);}
+")"				{fprintf(yyout,"tok_parc \t \t\t%d\n",riga);}
+";"				{fprintf(yyout,"tok_semicolon \t \t\t%d\n",riga);}
+"{"				{fprintf(yyout,"tok_grafa \t \t\t%d\n",riga);}
+"}"				{fprintf(yyout,"tok_grafc \t \t\t%d\n",riga);}
+"="				{fprintf(yyout,"tok_equal \t \t\t%d\n",riga);}
+"+"				{fprintf(yyout,"tok_plus \t \t\t%d\n",riga);}
+"*"				{fprintf(yyout,"tok_mult \t \t\t%d\n",riga);}
+
+"/*"/[a-zA-Z0-9 \n\t]*"*/"			{BEGIN(COMMENTO);contcom++;}
+
+[ \t\n]			{if(yytext[0]=='\n') riga++;}
+
+[a-zA-Z]*		{fprintf(yyout,"ID\t\t %s\t\t%d\n",yytext,riga);}
+
+0|[1-9][0-9]*	{fprintf(yyout,"INTCONST \t %s\t\t%d\n",yytext,riga);}
+
+<COMMENTO>[a-zA-Z0-9 \n\t]	{if(yytext[0]=='\n')
+									{
+										contcom++;
+									}
+							}
+
+<COMMENTO>"*/" {BEGIN(0);}
+
+"//"[a-zA-Z0-9 \t]*[\n]	{contcom++;}
+
+%%
+
+int main()
+{
+	fprintf(stdout,"TOKEN		LESSEMA     	LINENO\n\n");
+	yylex();
+	fprintf(yyout,"Le righe che contengono i commenti sono %d\n",contcom);
+	return 0;
+}

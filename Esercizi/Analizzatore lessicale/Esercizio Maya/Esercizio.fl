@@ -1,0 +1,78 @@
+/*Analizzare codici crittografati è l’obiettivo del programma da realizzare. In particolare, con l’ausilio di Flex, si deve realizzare uno strumento che aiuti 
+uno studioso a decifrare alcuni codici che venivano usati dai popoli Maya per comunicarsi strategie di attacco e di difesa durante i periodi di guerra. 
+
+- Le lettere maiuscole singole sono articoli, le lettere minuscole singole sono preposizioni. Una riga valida può cominciare solo con articoli. 
+Per confondere l’avversario un codice potrebbe contenere anche righe non valide, che quindi non rispettano la precedente condizione.
+Ogni riga è composta da parole separate da spazi o caratteri di tabulazione. Per alcune di tali parole è stata trovata una strategia di decifrazione
+
+- I sostantivi sono successioni di caratteri minuscoli consecutivi che cominciano per vocale. Se a partire dalla seconda lettera il numero di vocali è maggiore del numero del numero di consonanti il sostantivo è maschile, altrimenti è femminile.
+ 
+- I verbi sono successioni di cifre consecutive che cominciano per 0.
+
+- Gli aggettivi sono successioni di caratteri minuscoli consecutivi che cominciano per consonante. 
+	In particolare, un aggettivo è femminile se le vocali appaiono in ordine non decrescente e le vocali uguali compaiono consecutivamente. 
+	In caso contrario, è maschile.
+
+- Qualsiasi altro identificatore è non riconosciuto. Non si è ancora scoperto, per esempio, come si codificano gli avverbi. 
+
+-Il programma deve produrre un file di testo che riporti l’elenco degli identificatori incontrati nelle righe valide nell’ordine in cui compaiono e per ogni identificatore devono essere descritte le seguenti informazioni:
+Lessema dell’identificatore
+
+Tipo (cioè articolo, preposizione, sostantivo, verbo, aggettivo o non
+riconosciuto)
+Genere (femminile o maschile nel caso di sostantivi o aggettivi)
+Infine il file deve riportare il numero di righe valide e il numero di righe
+non valide.*/
+
+%{
+	int i=0,invalido=0,valido=0,contvoc=0,contcons=0;
+%}
+consonanti[b-df-hj-np-tv-z]
+vocali[aeiou]
+articolo [A-Z]
+preposizione [a-z]
+sostantivo {vocali}[a-z]+
+aggettivof {consonanti}+a*{consonanti}*e*{consonanti}*i*{consonanti}*e*{consonanti}*o*{consonanti}*u*{consonanti}*
+aggettivom {consonanti}[a-z]*
+verbo 0[0-9]*
+
+%x SOSTANTIVO
+
+%option noyywrap
+
+%%
+						/*Controllo se la riga è valida*/
+						
+^{articolo}[ \t\n]	{fprintf(yyout,"Tipo Articolo\tLessema %s",yytext); valido++;}
+^[a-z](.)* {invalido++;}
+
+						/*Controllo tipo lessema*/
+{articolo}[ \t\n]	{fprintf(yyout,"Tipo Articolo\tLessema %s",yytext);}
+{preposizione}/[ \t\n] {fprintf(yyout,"\nTipo Preposizione\tLessema %s",yytext);}
+{sostantivo}	{for(i=1;i<yyleng;i++)
+				    {
+						if(yytext[i]=='a' || yytext[i]=='e' || yytext[i]=='i' || yytext[i]=='o' || yytext[i]=='u')
+							contvoc++;
+						else
+							contcons++;
+					}
+				if(contvoc>contcons)
+					fprintf(yyout,"\nTipo Sostantivo\tGenere Maschile\tLessema %s",yytext);
+				else
+					fprintf(yyout,"\nTipo Sostantivo\tGenere Femminile\tLessema %s",yytext);
+				}
+{verbo}		 {fprintf(yyout,"\nTipo Verbo\tLessema %s",yytext);}
+
+{aggettivof}	{fprintf(yyout,"\nTipo Aggettivo\tGenere Femminile\tLessema %s",yytext);}
+{aggettivom}	{fprintf(yyout,"\nTipo Aggettivo\tGenere Maschile\tLessema %s",yytext);}
+
+[ \t]+				;
+%%
+
+int main()
+{
+	yylex();
+	fprintf(yyout,"\n\nNumero di righe valide: %d\n",valido);
+	fprintf(yyout,"Numero di righe non valide: %d\n",invalido);
+	return 0;
+}

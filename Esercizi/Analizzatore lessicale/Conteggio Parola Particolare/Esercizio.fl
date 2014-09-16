@@ -1,0 +1,31 @@
+/*
+Scrivere un programma in Flex che, preso in input un file di
+testo, conti tutte le parole sull’alfabeto {a, b, c} in cui la prima
+occorrenza del simbolo ‘b’ deve essere sempre preceduta da
+almeno un’occorrenza di ‘a’;
+*/
+
+%{
+int cont=0;
+%}
+
+%option noyywrap
+%%
+
+[ac]*|a[abc]*	cont++;
+[a-z]* ;
+\n ;
+[ ] ;
+
+%%
+int main()
+{
+	yylex();
+	printf("\ncontatore=%d",cont);
+	return 0;
+}
+
+		
+
+
+

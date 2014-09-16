@@ -1,0 +1,75 @@
+/*Sia preso in considerazione un linguaggio di programmazione, chiamato InitC, in cui
+l’inizializzazione e l’assegnazione dei tipi delle variabili viene effettuata in base alle
+caratteristiche lessicali degli identificatori delle variabili stesse. In particolare, gli identificatori
+delle variabili sono parole costituite da lettere e cifre che possono cominciare solo con lettere
+minuscole e le definizioni dei tipi e le inizializzazioni vengono effettuate secondo le regole
+seguenti:
+
+a) se l’identificatore è formato da una lettera seguita da un numero arbitrario positivo di
+cifre da 0 a 9, allora la variabile sarà di tipo intero e verrà inizializzata ad un valore intero
+uguale a quante delle suddette cifre sono uguali a ‘0’;
+
+b) se l’identificatore è costituito solo da lettere minuscole, allora la variabile sarà di tipo
+intero e viene inizializzata ad un valore che rappresenta il numero di vocali presenti a
+partire dalla seconda posizione; ad esempio “abdbeccdio” viene inizializzata a 3;
+
+c) se l’identificatore è costituito da una lettera minuscola seguita da lettere maiuscole
+allora la variabile sarà di tipo reale e la variabile sarà inizializzata a 0;
+Ogni parola formata in modo diverso da quanto descritto nei punti a), b) e c) è un elemento
+lessicale non identificato.
+
+Scrivere un programma in Flex che preso in input un file di testo riconosca gli identificatori
+delle variabili del linguaggio InitC e restituisca in output per ogni identificatore riconosciuto le
+seguenti informazioni:
+Variabile:……
+Riga:…… (riga in cui compare)
+Tipo:……
+Valore:…… (valore di inizializzazione)
+Inoltre deve riportare il numero degli identificatori riconosciuti e il numero delle parole che
+non sono elementi del lessico di InitC.*/
+%{
+	int riga=1,identric=0,noele=0,contzero=0,contvoc=0;
+%}
+
+%x INTERO NUMVOCALI SEP
+%option main
+
+min [a-z]
+consonanti [b-df-hj-np-tv-z]
+%%
+
+{min}/[0-9]+[ \t\n] {fprintf(yyout,"Variabile:%c",yytext[0]); BEGIN(INTERO);contzero=0;}
+
+{min}/[a-z]+[ \t\n] {fprintf(yyout,"Variabile:%c",yytext[0]); BEGIN(NUMVOCALI);contvoc=0;}
+
+{min}[A-Z]+/[ \t\n] {fprintf(yyout,"Variabile:%s\nRiga:%d\nTipo:Reale\nValore:0\n\n\n",yytext,riga); BEGIN(SEP);}
+
+<INTERO>[0] {fprintf(yyout,"%c",yytext[0]);contzero++;}
+<INTERO>[1-9] {fprintf(yyout,"%c",yytext[0]);}
+<INTERO>[ \n\t] {
+				  fprintf(yyout,"\nRiga:%d\nTipo:Intero\nValore:%d\n\n\n",riga,contzero);
+				  if(yytext[0]=='\n')
+				  {
+					riga++;
+				  }
+				  BEGIN(0);
+				}
+
+<NUMVOCALI>[aeiou] {fprintf(yyout,"%c",yytext[0]);contvoc++;}	
+<NUMVOCALI>{consonanti} {fprintf(yyout,"%c",yytext[0]);}
+<NUMVOCALI>[ \n\t] {
+				  fprintf(yyout,"\nRiga:%d\nTipo:Intero\nValore:%d\n\n\n",riga,contvoc);
+				  if(yytext[0]=='\n')
+				  {
+					riga++;
+				  }
+				  BEGIN(0);
+				}
+<SEP>[ \n\t] {if(yytext[0]=='\n')
+				{
+					riga++;
+				}
+			  BEGIN(0);
+			  }
+%%
+

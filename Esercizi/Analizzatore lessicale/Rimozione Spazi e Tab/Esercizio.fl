@@ -1,0 +1,7 @@
+/*comprima gli spazi e i tab in un unico singolo blank, e rimuova quelli alla fine di una linea.*/
+
+%option main
+
+%%
+(\t)*[ ]*	printf(" ");
+\n ;

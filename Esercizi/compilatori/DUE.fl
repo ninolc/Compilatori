@@ -1,0 +1,37 @@
+%{
+int cont_voc=0, cont_cons=0, conta_pari=0, cont_righe=0, cont_T5=0;
+%}
+
+
+%option noyywrap
+cons		[b-df-hl-np-tv-z]
+CONS		[B-DF-HL-NP-TV-Z]		
+voc		[aeiou]
+VOC		[AEIOU]		
+alfabeto	[a-z]
+ALFABETO	[A-Z]
+cifre		[0123456789]
+dispari		[13579]
+T1		{cons}?{CONS}?{alfabeto}*{ALFABETO}*{cons}?{CONS}?
+T2		{voc}+{alfabeto}*{cifre}*
+T3		{dispari}{voc}*{cifre}*
+T4		{cons}1?{alfabeto}+1?{cifre}+1?
+%%
+
+\n		{cont_righe++;}
+T1		{printf("T1\t\t attr \t\t%s\n",yytext);}
+T2		{printf("T2\t\t attr \t\t%s\n",yytext);}
+T3		{printf("T3\t\t attr \t\t%s\n",yytext);}
+T4		{printf("T4\t\t 1 \t\t%s\n",yytext);}
+T5		{cont_T5++;}
+
+%%
+
+int main(void){
+	printf("TOKEN\t\tATTRIBUTO\t\tLESSEMA\n\n");
+	yylex();
+	printf("\nNumero di righe: %d",cont_righe+1);
+	printf("\nT5: %d",cont_T5);
+	return 0;
+	system("pause");
+}

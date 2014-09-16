@@ -1,0 +1,17 @@
+/*Scrivere un programma in Flex che converta un file
+attraverso un cifrario a sostituzione.
+Esso consiste nel triplicare ogni vocale con l'aggiunta di una g
+e una s tra le occorrenze: per esempio, a diventa agasa, e
+diventa egese, e così via (quindi "ciao" diventa
+cigisiagasaogoso). Assumiamo che il file sia una sequenza di
+parole separati da spazi.*/
+%{
+	char carattere;
+%}
+
+%option main
+
+%%
+[aeiou]	{carattere=*yytext;
+	printf("%cg%cs%c",carattere,carattere,carattere);
+	}

@@ -1,0 +1,13 @@
+/*Scrivere un programma in Flex che riconosca e restituisca tutte
+le stringhe costituite da lettere minuscole che contengono le 5
+vocali in ordine. Per esempio : zfaehipojksuj;*/
+
+%option main
+
+%%
+
+[^aeiou]*[a][^aeiou]*[e][^aeiou]*[i][^aeiou]*[o][^aeiou]*[u][^aeiou]* ECHO;
+
+. ;
+  
+%%

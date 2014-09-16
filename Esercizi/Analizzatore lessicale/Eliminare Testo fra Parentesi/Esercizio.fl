@@ -1,0 +1,8 @@
+/*Elimini il testo inserito tra { e }*/
+
+%option main
+
+%%
+
+\{[^}]*\}	;
+

@@ -1,0 +1,22 @@
+/*Costruire uno scanner che conta il numero di caratteri e il numero di linee dell’input*/
+
+%{
+	int contc=0,contl=0;
+%}
+
+%option noyywrap
+
+%%
+\n	contl++;
+
+. 	contc++;
+
+%%
+
+int main(void)
+{
+	yylex();
+	printf("Il numero di caratteri e'= %d\n",contc);
+	printf("il numero di linee e'= %d\n",contl);
+	return 0;
+}

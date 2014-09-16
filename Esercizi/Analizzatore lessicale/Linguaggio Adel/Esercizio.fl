@@ -1,0 +1,80 @@
+/*Con l’ausilio di Flex scrivere un programma che riconosca le parole chiave e
+gli identificatori del linguaggio di programmazione ADEL come di seguito descritto.
+
+Le parole chiave del linguaggio sono if, then, else, begin, end.
+
+Gli identificatori sono costituiti da lettere consecutive (almeno due di cui la prima è
+una consonante maiuscola). Gli identificatori possono essere di tre tipi, quelli di tipo
+intero in cui le lettere successive alla prima sono tutte minuscole, quelli di tipo
+booleano in cui le lettere successive alla prima sono tutte maiuscole, gli altri sono di
+tipo reale.
+
+Per ogni parola chiave riconosciuta lo scanner deve indicare il tipo di keyword
+incontrato e il relativo numero di riga.
+
+Per ogni identificatore incontrato, lo scanner deve riportare il lessema, il tipo (intero,
+booleano o reale) e il suo valore di inizializzazione. Tale valore dipende dal lessema
+secondo la regola seguente: gli identificatori di tipo intero saranno inizializzati a 0 se
+il numero di vocali è maggiore del numero di consonanti, -1 altrimenti; gli
+identificatori di tipo booleano saranno inizializzati a true se le vocali sono in ordine
+crescente, altrimenti verranno inizializzati a false; gli identificatori di tipo reale
+saranno inizializzati ad un valore uguale al numero di consonanti.
+
+Il linguaggio consente l’uso di commenti che possono trovarsi su una sola riga,
+iniziano con // e terminano con la fine della riga oppure con //. Tutto ciò che si trova
+all’interno di un commento non è considerato né identificatore né parola chiave. Lo
+scanner, al match con un commento deve solo scrivere COMMENTO seguito dal
+numero di riga. Infine lo scanner deve riportare il numero degli identificatori per ogni
+tipo.*/
+%{
+	int riga=1,tipo1=0,tipo2=0,tipo3=0,vocali=0,cons=0,flag=0,contcons=1;
+%}
+%option main
+
+keyword "if"|"else"|"then"|"begin"|"end"
+consonanti [B-DF-HJ-NP-TV-Z]
+secondotipo A?{consonanti}*E?{consonanti}*I?{consonanti}*O?{consonanti}*U?{consonanti}*
+commento "//"
+
+%x PRIMO SECONDO TERZO SEP COMMENTO
+%%
+\n {riga++;}
+{keyword}/[ \t\n]	{fprintf(yyout,"Tipo:Keyword\nValore:%s\nRiga:%d\n\n",yytext,riga);BEGIN(SEP);}
+{consonanti}/[a-z]+[ \n\t] {fprintf(yyout,"Lessema:%c",yytext[0]);tipo1++;BEGIN(PRIMO);vocali=0;cons=0;}
+{consonanti}/[A-Z]+[ \n\t] {fprintf(yyout,"Lessema:%c",yytext[0]);tipo2++;BEGIN(SECONDO);}
+{consonanti}/[a-zA-Z]+[ \n\t] {fprintf(yyout,"Lessema:%c",yytext[0]);tipo3++;BEGIN(TERZO);contcons=1;}
+{commento}/[a-zA-Z]*	{BEGIN(COMMENTO);}
+
+<PRIMO>[aeiou] {fprintf(yyout,"%c",yytext[0]);vocali++;}
+<PRIMO>[b-df-hj-np-tv-z]	{fprintf(yyout,"%c",yytext[0]);cons++;}
+<PRIMO>[ \n\t] {if(vocali>cons)
+					{
+						fprintf(yyout,"\nTipo:Intero\nValore:0\nRiga:%d\n\n",riga);
+					}
+				else fprintf(yyout,"\nTipo:Intero\nValore:-1\nRiga:%d\n\n",riga);
+				if(yytext[0]=='\n') 
+				{riga++;
+				}
+				BEGIN(0);
+				}
+		
+<SECONDO>{secondotipo}/[ \n\t] {fprintf(yyout,"%s\nTipo:Booleano\nValore:true\nRiga:%d\n\n",yytext,riga);BEGIN(SEP);}
+<SECONDO>[A-Z]*/[ \n\t] {fprintf(yyout,"%s\nTipo:Booleano\nValore:false\nRiga:%d\n\n",yytext,riga);BEGIN(SEP);}
+
+<SEP>[ \n\t] {if(yytext[0]=='\n')
+				{riga++;
+				}
+				BEGIN(0);
+				}
+
+<TERZO>[b-df-hj-np-tv-zB-DF-HJ-NP-TV-Z] {fprintf(yyout,"%c",yytext[0]);contcons++;}
+<TERZO>[aeiouAEIOU] {fprintf(yyout,"%c",yytext[0]);}
+<TERZO>[ \n\t] {if(yytext[0]=='\n')
+				{riga++;
+				}
+				printf("\nTipo:Reale\nValore:%d\nRiga:%d\n\n",contcons, riga);
+				BEGIN(0);
+				}
+
+<COMMENTO>[a-zA-Z]*{commento}	{fprintf(yyout,"Tipo:Commento\nRiga:%d\n\n",riga); BEGIN(0);}
+<COMMENTO>[a-zA-Z]*[\n]	{fprintf(yyout,"Tipo:Commento\nRiga:%d\n\n",riga); riga++; BEGIN(0);}

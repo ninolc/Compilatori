@@ -1,0 +1,7 @@
+/*Elimini il testo inserito tra { e } su un’unica linea*/
+
+%option main
+
+%%
+
+\{[^\n\}]*\} ;

@@ -1,0 +1,29 @@
+/*conti le occorrenze dei numeri multipli di 3 e dei multipli di 5*/
+
+%{
+	int cont3=0,cont5=0, num;
+%}
+
+%option noyywrap
+
+%%
+
+0|[1-9][0-9]*		{num=atoi(yytext);
+			 if(num%3==0)
+				cont3++;
+			 if(num%5==0)
+				cont5++;
+			}
+\n ;
+. ;
+
+%%
+
+int main(void)
+{
+	yylex();
+	printf("Numero multipli di 3 = %d\n",cont3);
+	printf("Numero multipli di 5 = %d\n",cont5);
+	
+	return 0;
+}

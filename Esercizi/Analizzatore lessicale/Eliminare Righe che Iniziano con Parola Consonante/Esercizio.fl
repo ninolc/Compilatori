@@ -1,0 +1,9 @@
+/*Mantenga solo le linee che finiscono o cominciano con una consonante, cancellando le altre.*/
+
+%option main
+
+%%
+^[aeiou][a-zA-Z ]*[aeiou]$ ;
+\n ;
+
+

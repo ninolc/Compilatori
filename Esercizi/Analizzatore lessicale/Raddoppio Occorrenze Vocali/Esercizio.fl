@@ -1,0 +1,8 @@
+/*raddoppi tutte le occorrenze delle vocali in un file*/
+
+%option main
+
+%%
+
+[aeiouAEIOU]	{ECHO;ECHO;}
+

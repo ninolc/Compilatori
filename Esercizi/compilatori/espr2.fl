@@ -1,0 +1,21 @@
+%{
+#include <stdio.h>
+#include "espr2.tab.h"
+%}
+
+/* regular definitions */
+
+delim  [ \t]
+ws   {delim}+
+digit  [0-9]
+number {digit}+
+%option noyywrap
+%%
+{ws}		;
+{number}		{ (yylval=atoi(yytext)); return(NUM);  }
+\+				{ return(PIU); }
+\*				{ return(PER); }
+\(				{ return(PAR_AP);}
+\)				{ return(PAR_CH);}
+\n				{ return(NEWL);}
+%%

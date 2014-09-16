@@ -1,0 +1,51 @@
+/*Scrivere un programma in Flex che nelle parole con un numero
+pari di vocali sostituisca tutte le vocali con ‘a’, e trasforma in
+maiuscolo tutte le consonanti. Per le parole con numero dispari
+di vocali, ogni vocale viene trasformata nella successiva (a->e, e-
+>i, …, u->a), le consonanti doppie vengono dimezzate (rr->r),
+tutte le altre vengono trasformate in maiuscolo.*/
+%{
+	int i=0;
+%}
+
+%option main
+
+consonanti [b-df-hj-np-tv-z]
+vocali [aeiou]
+
+%%
+
+({consonanti}*{vocali}{consonanti}*{vocali}{consonanti}*)*[ \n\t]		{for(i=0;i<yyleng;i++)
+																			{
+																				if(yytext[i]=='a' || yytext[i]=='e' || yytext[i]=='i' || yytext[i]=='o' || yytext[i]=='u' || yytext[i]=='u') fprintf(yyout,"a");
+																				else fprintf(yyout,"%c",toupper(yytext[i]));
+																			}
+																		}
+
+[a-z]*[ \n\t]		{
+						for(i=0;i<yyleng;i++)
+						{
+							if(yytext[i]=='a') fprintf(yyout,"e");
+							if(yytext[i]=='e') fprintf(yyout,"i");
+							if(yytext[i]=='i') fprintf(yyout,"o");
+							if(yytext[i]=='o') fprintf(yyout,"u");
+							if(yytext[i]=='u') fprintf(yyout,"a");
+							else
+							{
+								if(i+1<=yyleng && yytext[i]==yytext[i+1] && yytext[i+1]!=' ')
+									{
+										fprintf(yyout,"%c",yytext[i]);
+										i=i+1;
+									}
+								else
+								{
+									fprintf(yyout,"%c",toupper(yytext[i]));
+								}
+							}
+						}
+					}
+
+<<EOF>>					return;
+
+
+

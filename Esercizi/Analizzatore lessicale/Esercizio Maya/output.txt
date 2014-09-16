@@ -1,0 +1,11 @@
+Tipo Articolo	Lessema I 
+Tipo Preposizione	Lessema s
+Tipo Sostantivo	Genere Maschile	Lessema aciao
+
+Tipo Articolo	Lessema G 
+Tipo Verbo	Lessema 0290
+Tipo Aggettivo	Genere Femminile	Lessema caeo
+Tipo Aggettivo	Genere Maschile	Lessema caeadas
+
+Numero di righe valide: 2
+Numero di righe non valide: 1

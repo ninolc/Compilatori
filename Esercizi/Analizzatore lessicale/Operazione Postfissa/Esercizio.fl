@@ -1,0 +1,55 @@
+/*Operazione Postfissa*/
+
+/*Implementazione della Pila*/
+%{
+	#include<stdlib.h>
+	typedef struct elemento
+	{
+		int inf;
+		struct elemento *next;
+	}ELEMENTO;
+	
+	void push(ELEMENTO **p, int ele)
+	{
+		ELEMENTO *paus;
+		paus=(ELEMENTO*)malloc(sizeof(ELEMENTO));
+		if(paus!=NULL)
+		{
+			paus->next=(*p);
+			paus->inf=ele;
+			(*p)=paus;
+		}
+		
+	}
+	
+	int pop(ELEMENTO **p)
+	{
+		ELEMENTO *paus;
+		int numero=0;
+		if(*p!=NULL)
+		{
+			numero=(*p)->inf;
+			paus=(*p);
+			(*p)=(*p)->next;
+			free(paus);
+		}
+		return numero;
+	}
+	ELEMENTO *stack=NULL;
+	int risultato;
+%}
+
+%option main
+
+intero 0|[1-9][0-9]*
+
+%%
+
+{intero}/[ \t\n]	{push(&stack,atoi(yytext));}
+
+[+] {risultato=pop(&stack)+pop(&stack); push(&stack,risultato);}
+[-] {risultato=pop(&stack)-pop(&stack); push(&stack,risultato);}
+[*] {risultato=pop(&stack)*pop(&stack); push(&stack,risultato);}
+[/] {risultato=pop(&stack)/pop(&stack); push(&stack,risultato);}
+
+\n {printf("Il risultato dell'operazione e'=%d",pop(&stack));}

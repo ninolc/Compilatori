@@ -1,0 +1,22 @@
+%{
+#include <stdio.h>
+#include "espr.tab.h"
+%}
+
+/* regular definitions */
+
+delim  [ \t\n]
+ws   {delim}+
+digit  [0-9]
+number {digit}+
+%option noyywrap
+%%
+{ws}		;
+{number}		{ return(NUM); }
+\+				{ return(PIU); }
+\-				{ return(MENO);}
+\*				{ return(PER); }
+[/]				{ return(DIVISO);}
+\(				{ return(PAR_AP);}
+\)				{ return(PAR_CH);}
+%%

@@ -1,0 +1,8 @@
+%option main
+cons		[b-df-hl-np-tv-z]
+voc			[aeiou]
+%%
+
+{cons}*					ECHO;
+.						;
+%%

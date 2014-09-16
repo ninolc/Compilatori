@@ -1,0 +1,47 @@
+/*
+Scrivere un programma in FLEX che trasformi in maiuscole
+tutte le parole delle righe che cominciano con una parola di
+caratteri tutti minuscoli, in minuscole tutte le parole delle
+righe che cominciano con una parola di caratteri tutti
+maiuscoli. Le altre siano lasciate inalterate
+*/
+
+%{
+   int i;
+%}
+
+%S MAIUSCOLO MINUSCOLO
+
+%option main
+
+%%
+
+^[A-Z]* {while(yytext[i]!='\0')
+		{
+		printf("%c",tolower(yytext[i]));
+		i++;
+		}
+	i=0;
+	BEGIN(MINUSCOLO);
+	}
+	
+^[a-z]* {while(yytext[i]!='\0')
+		{
+		printf("%c",toupper(yytext[i]));
+		i++;
+		}
+	i=0;
+	BEGIN(MAIUSCOLO);
+	}
+	
+^[a-zA-Z]* ECHO;
+
+\n {printf("\n"); BEGIN(INITIAL);}
+
+<MINUSCOLO>[a-zA-Z] printf("%c",toupper(yytext[0]));
+
+<MAIUSCOLO>[a-zA-Z] printf("%c",tolower(yytext[0]));
+
+
+%%
+

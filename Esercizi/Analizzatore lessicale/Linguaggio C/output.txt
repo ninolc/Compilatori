@@ -1,0 +1,15 @@
+TOKEN		LESSEMA     	LINENO
+
+ID		 ass		2
+tok_int 	 		4
+ID		 x		4
+tok_equal 	 		4
+ID		 c		4
+tok_plus 	 		4
+INTCONST 	 3		4
+tok_semicolon 	 		4
+ID		 saisa		6
+tok_equal 	 		6
+INTCONST 	 1		6
+tok_void 	 		6
+Le righe che contengono i commenti sono 4
