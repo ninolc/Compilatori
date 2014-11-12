@@ -1,0 +1,51 @@
+%{
+int righe=0, token5=0, run_pari, attributo=0;
+%}
+
+%option noyywrap
+
+%x T1 T2 T3 T4
+
+VOC [AEIOU]
+cC [b-df-hj-np-tv-zB-DF-HJ-NP-TV-Z]
+CC [B-DF-HJ-NP-TV-Z]
+
+%%
+
+{VOC}/[A-Z0-9]+		{printf("T1\t\t %s",yytext); run_pari=0; 
+					BEGIN(T1);}
+{cC}/[A-Za-z]*{cC} 	{printf("T2\t\t"); ECHO; attributo++;
+					BEGIN T2;}
+[02468]/[aeiou0-9]*	{printf("T3\t\t"); ECHO; attributo=0;
+					BEGIN T3;}
+{CC}/(0?[A-Z1-9]+)*	{printf("T4\t\t"); ECHO; attributo=0;
+					BEGIN T4;}
+
+<T1>[02468]+		{ECHO; if (yyleng>run_pari) run_pari=yyleng;}
+<T1>[ \t]+		{printf("\t\t%d\n",run_pari); BEGIN(INITIAL);}
+<T1>[\n]	{righe++;printf("\t\t%d\n",run_pari); BEGIN(INITIAL);}
+<T1>.				{ECHO;}
+
+<T2>[AEIOUaeiou]		{ECHO;attributo--;}
+<T2>{cC}			{ECHO;attributo++;}	
+<T2,T3,T4>[ \t]+		{printf("\t\t%d\n",attributo);
+			attributo=0; BEGIN(INITIAL);}
+<T2,T3,T4>[\n]	{righe++;printf("\t\t%d\n",attributo); 
+		attributo=0; BEGIN(INITIAL);}
+
+<T3>[13579][aeiou]*/[13579] {ECHO; if(yyleng-1>attributo) 							attributo=yyleng-1;}
+
+
+[\n]				{righe++;}
+[ \t]+				;
+[a-zA-Z0-9]+		{token5++;}
+
+%%
+
+int main(void){
+	printf("TOKEN\t\t LESSEMA \t\t ATTRIBUTO\n\n");
+	yylex();
+	printf("Numero righe: %d\n",righe);
+	printf("T5: %d\n", token5);
+	return 0;
+}

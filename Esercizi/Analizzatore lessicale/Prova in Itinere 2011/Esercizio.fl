@@ -1,35 +1,36 @@
-/*• Con l’ausilio di Flex scrivere un programma che preso in input un
+/*
+Con l'ausilio di Flex scrivere un programma che preso in input un
 file di testo ne produca un altro che risulti di dimensione minore,
 attuando alcune strategie di compressione lossy ad ogni parola del
 testo (si definisce parola una sequenza di lettere e cifre). In
 particolare tale programma agisce sulle parole che cominciano per
 consonante maiuscola nel seguente modo:
-• ogni parola costituita solo da lettere maiuscole viene trasformata in una
+* ogni parola costituita solo da lettere maiuscole viene trasformata in una
 parola in cui le occorrenze di vocali uguali consecutive vengono compresse
 in un'unica vocale (uguale) minuscola seguita dal numero di occorrenze.
 
-• ogni parola costituita da una unica consonante maiuscola seguita solo da
+* ogni parola costituita da una unica consonante maiuscola seguita solo da
 lettere minuscole viene trasformata secondo la seguente regola. Tutte le
 occorrenze di vocali consecutive crescenti vengono trasformate nella
 prima vocale (trasformata in maiuscolo) seguita dall’intero che
 rappresenta il numero delle vocali soppresse. Per esempio, ‘eio’ viene
 trasformata in ‘E2’.
 
-• per tutte le parole che iniziano per consonante maiuscola seguita solo da
+* per tutte le parole che iniziano per consonante maiuscola seguita solo da
 cifre, se tali cifre rappresentano un numero pari esso viene sostituito con
 l’intero ottenuto dividendo per la massima potenza di 2 per cui il numero
-è divisibile, concatenato con ‘b’ e poi concatenato con l’esponente della
+è divisibile, concatenato con "b" e poi concatenato con l'esponente della
 suddetta potenza. Per esempio A120 è sostituito con A15b3 poiché
 120=2^3×15.
 
-• per le parole costituite che cominciano per consonante maiuscola
+* per le parole costituite che cominciano per consonante maiuscola
 seguita sia da lettere che da cifre: tutte le cifre consecutive vengono
-sostituite con l’intero che rappresenta la somma di tali cifre. Le lettere
+sostituite con l'intero che rappresenta la somma di tali cifre. Le lettere
 devono essere cambiate da maiuscolo in minuscolo e viceversa.
 
-• tutte le altre parole devono essere lasciate invariate.
+* tutte le altre parole devono essere lasciate invariate.
 
-• Alla fine della scansione del file il programma deve
+* Alla fine della scansione del file il programma deve
 visualizzare il numero delle sostituzioni di parole effettuate
 per ciascuna delle tipologie sopra elencate.
 */
@@ -66,7 +67,7 @@ mai[A-Z]
 <VOCALICONS>{vocali}*	{while(i<yyleng)
 		             {
 		               if(controllo==0)
-			         {
+                       {
 			           for(j=0;yytext[i]!=v[j];j++);
 			           fprintf(yyout,"%c",toupper(yytext[i]));
 			           controllo=1;
