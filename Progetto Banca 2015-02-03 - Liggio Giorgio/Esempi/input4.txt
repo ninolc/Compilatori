@@ -1,0 +1,6 @@
+DATA: 12/2013
+!!
+??
+Rossi Mario, RSSMRA60B01F205S ;
+Verdi Carlo, VRDCRL81S17H284T ;
+La Bianca Giovanni, LBNGNN71M16G273L ;

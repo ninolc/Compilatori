@@ -1,0 +1,22 @@
+%{
+	#include <string.h>
+	#include "banca.tab.h"
+%}
+%option noyywrap
+
+%%
+"DATA:"							{return(DATE);}
+[0-9]{2}[/][0-9]{4}				{yylval.string = strdup(yytext); return(DATESTR);}
+"!!"							{return(SEP1);}
+[A-Z0-9]{16}					{yylval.string = strdup(yytext); return(CF);}
+[0-9][0-9][:]					{return(DAY);}
+"+"								{return(yytext[0]);}
+"-"								{return(yytext[0]);}
+0|[1-9][0-9]*					{yylval.value = atoi(yytext); return(NUMVAL);}
+";"								{return(yytext[0]);}
+"%%"							{return(SEP_CM);}
+"??"							{return(SEP2);}
+[a-zA-Z ]+/,					{yylval.string = strdup(yytext); return(CTM_NAME);}
+","								{return(yytext[0]);}
+[ \t\n]+						;
+.								{yyterminate();}
